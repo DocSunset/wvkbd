@@ -23,16 +23,16 @@ struct clr_scheme scheme1 = {
 
 /* layers is an ordered list of layouts, used to cycle through */
 static enum layout_id layers[] = {
-  Full, // First layout is the default layout on startup
-  Special,   Emoji,  Simple,  SimpleGrid, Nav,      Dialer,
-  Cyrillic,  Arabic, Persian, Greek,      Georgian,
+  TW, TWsym, m8c, // First layout is the default layout on startup
+  //Special,   Emoji,  Simple,  SimpleGrid, Nav,      Dialer,
+  //Cyrillic,  Arabic, Persian, Greek,      Georgian,
   NumLayouts // signals the last item, may not be omitted
 };
 
 /* layers is an ordered list of layouts, used to cycle through */
 static enum layout_id landscape_layers[] = {
   Landscape, // First layout is the default layout on startup
-  Special,   Emoji, Nav, Greek,
+  Special,   //Emoji, Nav, Greek,
   NumLayouts // signals the last item, may not be omitted
 };
 
