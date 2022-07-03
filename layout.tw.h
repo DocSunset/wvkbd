@@ -172,11 +172,11 @@ static struct layout layouts[NumLayouts] = {
  * - layout: layout to switch to when key is pressed
  */
 #define TWTOPROW {"esc", "esc", 1.0, Code, KEY_ESC, .scheme = 1},\
-  {"ctr", "ctr", 1.0, Mod, Ctrl, .scheme = 1},\
-  {"alt", "alt", 1.0, Mod, Alt, .scheme = 1},\
-  {"sup", "sup", 1.0, Mod, Super, .scheme = 1},\
+  {"C", "C", 1.0, Mod, Ctrl, .scheme = 1},\
+  {"A", "A", 1.0, Mod, Alt, .scheme = 1},\
+  {"S", "S", 1.0, Mod, Super, .scheme = 1},\
   {"com", "com", 1.0, Compose, .scheme = 1},\
-  {"Tab", "Tab", 1.0, Code, KEY_TAB, .scheme = 1}
+  {"tab", "tab", 1.0, Code, KEY_TAB, .scheme = 1}
 
 static struct key keys_tw[] = {
   TWTOPROW,
@@ -222,7 +222,7 @@ static struct key keys_tw[] = {
   {"bks", "bks", 1.5, Code, KEY_BACKSPACE, .scheme = 1},
   {"", "", 0.0, EndRow},
 
-  {"123", "123", 2.0, NextLayer, .scheme = 1, .reset_mod = 1},
+  {"123", "123", 2.0, Layout, 0, &layouts[TWsym], .scheme = 1, .reset_mod = 1},
   {",", "'", 1.0, Code, KEY_COMMA},
   {"", "", 4.0, Code, KEY_SPACE},
   {".", "?", 1.0, Code, KEY_DOT},
@@ -275,8 +275,8 @@ static struct key keys_twsym[] = {
   {"del", "del", 1.5, Code, KEY_DELETE, .scheme = 1},
   {"", "", 0.0, EndRow},
 
-  {"abc", "abc", 1.0, BackLayer, .scheme = 1},
-  {"m8c", "m8c", 1.0, NextLayer, .scheme = 1},
+  {"abc", "abc", 1.0, Layout, 0, &layouts[TW], .scheme = 1},
+  {"m8c", "m8c", 1.0, Layout, 0, &layouts[m8c], .scheme = 1},
   {";", ":", 1.0, Code, KEY_SEMICOLON, .scheme = 1},
   {"", "", 4.0, Code, KEY_SPACE},
   {"/", ">", 1.0, Code, KEY_SLASH, .scheme = 1},
@@ -288,8 +288,8 @@ static struct key keys_twsym[] = {
 
 static struct key keys_m8c[] = {
   /* end of layout */
-  {"abc", "abc", 2.0, NextLayer, .scheme = 1},
-  {"r", "R", 2.0, Code, KEY_R, &layouts[ComposeR]},
+  {"abc", "abc", 2.0, Layout, 0, &layouts[TW], .scheme = 1},
+  {"r", "R", 2.0, Code, KEY_R, &layouts[ComposeR], .scheme = 1},
   {"", "", 0.0, EndRow},
 
   {"", "", 1.0, Pad},
@@ -307,6 +307,7 @@ static struct key keys_m8c[] = {
   {"", "", 1.0, Pad},
   {"j", "J", 1.0, Code, KEY_J, &layouts[ComposeJ]},
   {"k", "K", 1.0, Code, KEY_K, &layouts[ComposeK]},
+  {"", "", 1.0, Pad},
   {"", "", 0.0, Last},
 };
 
