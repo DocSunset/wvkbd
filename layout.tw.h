@@ -175,15 +175,15 @@ static struct layout layouts[NumLayouts] = {
   {"C", "C", 1.0, Mod, Ctrl, .scheme = 1},\
   {"A", "A", 1.0, Mod, Alt, .scheme = 1},\
   {"S", "S", 1.0, Mod, Super, .scheme = 1},\
-  {"com", "com", 1.0, Compose, .scheme = 1},\
-  {"tab", "tab", 1.0, Code, KEY_TAB, .scheme = 1}
+  {"é", "é", 1.0, Compose, .scheme = 1},\
+  {"↹", "↹", 1.0, Code, KEY_TAB, .scheme = 1}
 
 static struct key keys_tw[] = {
   TWTOPROW,
-  {"↑", "↑", 1.0, Code, KEY_UP, .scheme = 1},
-  {"↓", "↓", 1.0, Code, KEY_DOWN, .scheme = 1},
-  {"←", "←", 1.0, Code, KEY_LEFT, .scheme = 1},
-  {"→", "→", 1.0, Code, KEY_RIGHT, .scheme = 1},
+  {"`", "~", 1.0, Code, KEY_GRAVE, .scheme = 1},
+  {"'", "\"", 1.0, Code, KEY_APOSTROPHE, .scheme = 1},
+  {"-", "_", 1.0, Code, KEY_MINUS, .scheme = 1},
+  {"\\", "|", 1.0, Code, KEY_BACKSLASH, .scheme = 1},
   {"", "", 0.0, EndRow},
 
   {"q", "Q", 1.0, Code, KEY_Q, &layouts[Emoji]},
@@ -198,8 +198,7 @@ static struct key keys_tw[] = {
   {"p", "P", 1.0, Code, KEY_P, &layouts[ComposeP]},
   {"", "", 0.0, EndRow},
 
-  {"", "", 0.5, Pad},
-  {"a", "A", 1.0, Code, KEY_A, &layouts[ComposeA]},
+  {"a", "A", 1.5, Code, KEY_A, &layouts[ComposeA]},
   {"s", "S", 1.0, Code, KEY_S, &layouts[ComposeS]},
   {"d", "D", 1.0, Code, KEY_D, &layouts[ComposeD]},
   {"f", "F", 1.0, Code, KEY_F, &layouts[ComposeF]},
@@ -207,8 +206,7 @@ static struct key keys_tw[] = {
   {"h", "H", 1.0, Code, KEY_H, &layouts[ComposeH]},
   {"j", "J", 1.0, Code, KEY_J, &layouts[ComposeJ]},
   {"k", "K", 1.0, Code, KEY_K, &layouts[ComposeK]},
-  {"l", "L", 1.0, Code, KEY_L, &layouts[ComposeL]},
-  {"", "", 0.5, Pad},
+  {"l", "L", 1.5, Code, KEY_L, &layouts[ComposeL]},
   {"", "", 0.0, EndRow},
 
   {"⇧", "⇧", 1.5, Mod, Shift, .scheme = 1},
@@ -219,7 +217,7 @@ static struct key keys_tw[] = {
   {"b", "B", 1.0, Code, KEY_B, &layouts[ComposeB]},
   {"n", "N", 1.0, Code, KEY_N, &layouts[ComposeN]},
   {"m", "M", 1.0, Code, KEY_M, &layouts[ComposeM]},
-  {"bks", "bks", 1.5, Code, KEY_BACKSPACE, .scheme = 1},
+  {"⌫", "⌫", 1.5, Code, KEY_BACKSPACE, .scheme = 1},
   {"", "", 0.0, EndRow},
 
   {"123", "123", 2.0, Layout, 0, &layouts[TWsym], .scheme = 1, .reset_mod = 1},
@@ -241,15 +239,15 @@ static struct key keys_twsym[] = {
   {"", "", 0.0, EndRow},
 
   {"👍", "✅", 1.0, Copy, 0x1f44d, 0, 0x2705},
-  {"😅", "👶", 1.0, Copy, 0x1f605, 0, 0x1f476},
-  {"😆", "👻", 1.0, Copy, 0x1f606, 0, 0x1f47b},
   {"🤣", "💰", 1.0, Copy, 0x1f923, 0, 0x1f4b0},
   {"😘", "💕", 1.0, Copy, 0x1f618, 0, 0x1f495},
-  {"😎", "❤", 1.0, Copy, 0x1f60e, 0, 0x2764},
   {"😓", "💀", 1.0, Copy, 0x1f613, 0, 0x1f480},
   {"😭", "😯", 1.0, Copy, 0x1f62d, 0, 0x1f62f},
-  {"😳", "😕", 1.0, Copy, 0x1f633, 0, 0x1f615},
   {"😴", "😵", 1.0, Copy, 0x1f634, 0, 0x1f635},
+  {"↑", "↑", 1.0, Code, KEY_UP, .scheme = 1},
+  {"↓", "↓", 1.0, Code, KEY_DOWN, .scheme = 1},
+  {"←", "←", 1.0, Code, KEY_LEFT, .scheme = 1},
+  {"→", "→", 1.0, Code, KEY_RIGHT, .scheme = 1},
   {"", "", 0.0, EndRow},
 
   {"1", "!", 1.0, Code, KEY_1},
@@ -265,21 +263,20 @@ static struct key keys_twsym[] = {
   {"", "", 0.0, EndRow},
 
   {"⇧", "⇧", 1.5, Mod, Shift, .scheme = 1},
-  {"`", "~", 1.0, Code, KEY_GRAVE},
-  {"'", "\"", 1.0, Code, KEY_APOSTROPHE},
-  {"-", "_", 1.0, Code, KEY_MINUS},
   {"=", "+", 1.0, Code, KEY_EQUAL},
   {"[", "{", 1.0, Code, KEY_LEFTBRACE},
+  {"<", "«", 1.0, Code, KEY_COMMA, 0, AltGr},
+  {"/", ">", 1.0, Code, KEY_SLASH},
+  {">", "»", 1.0, Code, KEY_DOT, 0, AltGr},
   {"]", "}", 1.0, Code, KEY_RIGHTBRACE},
-  {"\\", "|", 1.0, Code, KEY_BACKSLASH},
-  {"del", "del", 1.5, Code, KEY_DELETE, .scheme = 1},
+  {"del", "del", 1.0, Code, KEY_DELETE, .scheme = 1},
+  {"⌫", "⌫", 1.5, Code, KEY_BACKSPACE, .scheme = 1},
   {"", "", 0.0, EndRow},
 
-  {"abc", "abc", 1.0, Layout, 0, &layouts[TW], .scheme = 1},
-  {"m8c", "m8c", 1.0, Layout, 0, &layouts[m8c], .scheme = 1},
+  {"abc", "abc", 2.0, Layout, 0, &layouts[TW], .scheme = 1},
   {";", ":", 1.0, Code, KEY_SEMICOLON, .scheme = 1},
   {"", "", 4.0, Code, KEY_SPACE},
-  {"/", ">", 1.0, Code, KEY_SLASH, .scheme = 1},
+  {"m8c", "m8c", 1.0, Layout, 0, &layouts[m8c], .scheme = 1},
   {"Enter", "Enter", 2.0, Code, KEY_ENTER, .scheme = 1},
 
   /* end of layout */
