@@ -150,18 +150,18 @@ wl_touch_down(void *data, struct wl_touch *wl_touch, uint32_t serial,
 	touch_x = wl_fixed_to_int(x);
 	touch_y = wl_fixed_to_int(y);
 
-	kbd_unpress_key(&keyboard, time);
+	//kbd_unpress_key(&keyboard, time);
 
 	next_key = kbd_get_key(&keyboard, touch_x, touch_y);
 	if (next_key) {
-		kbd_press_key(&keyboard, next_key, time);
+		kbd_press_key(&keyboard, next_key, time, id);
 	}
 }
 
 void
 wl_touch_up(void *data, struct wl_touch *wl_touch, uint32_t serial,
             uint32_t time, int32_t id) {
-	kbd_release_key(&keyboard, time);
+	kbd_release_key(&keyboard, time, id);
 }
 
 void
@@ -172,7 +172,7 @@ wl_touch_motion(void *data, struct wl_touch *wl_touch, uint32_t time,
 	touch_x = wl_fixed_to_int(x);
 	touch_y = wl_fixed_to_int(y);
 
-	kbd_motion_key(&keyboard, time, touch_x, touch_y);
+	kbd_motion_key(&keyboard, time, touch_x, touch_y, id);
 }
 
 void
@@ -207,7 +207,7 @@ wl_pointer_motion(void *data, struct wl_pointer *wl_pointer, uint32_t time,
 	cur_y = wl_fixed_to_int(surface_y);
 
 	if (cur_press) {
-		kbd_motion_key(&keyboard, time, cur_x, cur_y);
+		kbd_motion_key(&keyboard, time, cur_x, cur_y, 0);
 	}
 }
 
@@ -218,15 +218,15 @@ wl_pointer_button(void *data, struct wl_pointer *wl_pointer, uint32_t serial,
 	cur_press = state == WL_POINTER_BUTTON_STATE_PRESSED;
 
 	if (cur_press) {
-		kbd_unpress_key(&keyboard, time);
+		kbd_unpress_key(&keyboard, time, 0);
 	} else {
-		kbd_release_key(&keyboard, time);
+		kbd_release_key(&keyboard, time, 0);
 	}
 
 	if (cur_press && cur_x >= 0 && cur_y >= 0) {
 		next_key = kbd_get_key(&keyboard, cur_x, cur_y);
 		if (next_key) {
-			kbd_press_key(&keyboard, next_key, time);
+			kbd_press_key(&keyboard, next_key, time, 0);
 		}
 	}
 }

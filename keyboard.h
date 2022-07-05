@@ -75,6 +75,8 @@ struct key {
 	// actual coordinates on the surface (pixels), will be computed automatically
 	// for all keys
 	uint32_t x, y, w, h;
+	uint32_t id; // id of touch that pressed this key
+	bool pressed;
 };
 
 struct layout {
@@ -118,10 +120,10 @@ void draw_over_inset(struct drwsurf *ds, uint32_t x, uint32_t y, uint32_t width,
 void kbd_init(struct kbd *kb, struct layout *layouts, char *layer_names_list);
 void kbd_init_layout(struct layout *l, uint32_t width, uint32_t height);
 struct key *kbd_get_key(struct kbd *kb, uint32_t x, uint32_t y);
-void kbd_unpress_key(struct kbd *kb, uint32_t time);
-void kbd_release_key(struct kbd *kb, uint32_t time);
-void kbd_motion_key(struct kbd *kb, uint32_t time, uint32_t x, uint32_t y);
-void kbd_press_key(struct kbd *kb, struct key *k, uint32_t time);
+void kbd_unpress_key(struct kbd *kb, uint32_t time, uint32_t id);
+void kbd_release_key(struct kbd *kb, uint32_t time, uint32_t id);
+void kbd_motion_key(struct kbd *kb, uint32_t time, uint32_t x, uint32_t y, uint32_t id);
+void kbd_press_key(struct kbd *kb, struct key *k, uint32_t time, uint32_t id);
 void kbd_print_key_stdout(struct kbd *kb, struct key *k);
 void kbd_draw_key(struct kbd *kb, struct key *k, enum key_draw_type);
 void kbd_draw_layout(struct kbd *kb);

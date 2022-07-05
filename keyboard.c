@@ -164,11 +164,33 @@ kbd_get_key(struct kbd *kb, uint32_t x, uint32_t y) {
 	return NULL;
 }
 
+static struct key *
+kbd_get_touched_key(struct kbd *kb, uint32_t id) {
+	struct layout *l = kb->layout;
+	struct key *k = l->keys;
+	if (kb->debug)
+		fprintf(stderr, "get touched key: %d\n", id);
+	while (k->type != Last) {
+		if ((k->type != EndRow) && (k->type != Pad) &&
+		    (k->pressed) && (k->id == id)) {
+			return k;
+		}
+		k++;
+	}
+	return NULL;
+}
+
 void
-kbd_unpress_key(struct kbd *kb, uint32_t time) {
+kbd_unpress_key(struct kbd *kb, uint32_t time, uint32_t id) {
 	bool unlatch_shift = false;
 
-	if (kb->last_press) {
+	struct key * unpressed = kbd_get_touched_key(kb, id);
+	if (unpressed) {
+		if (kb->debug) {
+			const char *label = (kb->mods & Shift) ? unpressed->shift_label : unpressed->label;
+			fprintf(stderr, "~~ Unpress key: %d %s\n", id, label);
+		}
+
 		unlatch_shift = (kb->mods & Shift) == Shift;
 
 		if (unlatch_shift) {
@@ -176,11 +198,11 @@ kbd_unpress_key(struct kbd *kb, uint32_t time) {
 			zwp_virtual_keyboard_v1_modifiers(kb->vkbd, kb->mods, 0, 0, 0);
 		}
 
-		if (kb->last_press->type == Copy) {
+		if (unpressed->type == Copy) {
 			zwp_virtual_keyboard_v1_key(kb->vkbd, time, 127, // COMP key
 			                            WL_KEYBOARD_KEY_STATE_RELEASED);
 		} else {
-			zwp_virtual_keyboard_v1_key(kb->vkbd, time, kb->last_press->code,
+			zwp_virtual_keyboard_v1_key(kb->vkbd, time, unpressed->code,
 			                            WL_KEYBOARD_KEY_STATE_RELEASED);
 		}
 
@@ -190,16 +212,18 @@ kbd_unpress_key(struct kbd *kb, uint32_t time) {
 		} else if (unlatch_shift) {
 			kbd_draw_layout(kb);
 		} else {
-			kbd_draw_key(kb, kb->last_press, Unpress);
+			kbd_draw_key(kb, unpressed, Unpress);
 		}
-
-		kb->last_press = NULL;
+		unpressed->pressed = false;
 	}
 }
 
 void
-kbd_release_key(struct kbd *kb, uint32_t time) {
-	kbd_unpress_key(kb, time);
+kbd_release_key(struct kbd *kb, uint32_t time, uint32_t id) {
+	if (kb->debug)
+		fprintf(stderr, "~~ Release key: %d\n", id);
+
+	kbd_unpress_key(kb, time, id);
 	if (kb->print_intersect && kb->last_swipe) {
 		printf("\n");
 		// Important so autocompleted words get typed in time
@@ -210,12 +234,14 @@ kbd_release_key(struct kbd *kb, uint32_t time) {
 }
 
 void
-kbd_motion_key(struct kbd *kb, uint32_t time, uint32_t x, uint32_t y) {
+kbd_motion_key(struct kbd *kb, uint32_t time, uint32_t x, uint32_t y, uint32_t id) {
+	if (kb->debug)
+		fprintf(stderr, "~~ Motion key: +%d,+%d %d\n", x, y, id);
 	// Output intersecting keys
 	// (for external 'swiping'-based accelerators).
 	if (kb->print_intersect) {
-		if (kb->last_press) {
-			kbd_unpress_key(kb, time);
+		if (kbd_get_touched_key(kb, id)) {
+			kbd_unpress_key(kb, time, id);
 			// Redraw last press as a swipe.
 			kbd_draw_key(kb, kb->last_swipe, Swipe);
 		}
@@ -228,12 +254,17 @@ kbd_motion_key(struct kbd *kb, uint32_t time, uint32_t x, uint32_t y) {
 			kbd_draw_key(kb, kb->last_swipe, Swipe);
 		}
 	} else {
-		kbd_unpress_key(kb, time);
+		kbd_unpress_key(kb, time, id);
 	}
 }
 
 void
-kbd_press_key(struct kbd *kb, struct key *k, uint32_t time) {
+kbd_press_key(struct kbd *kb, struct key *k, uint32_t time, uint32_t id) {
+	if (kb->debug) {
+		const char *label = (kb->mods & Shift) ? k->shift_label : k->label;
+		fprintf(stderr, "~~ Press key: %d %s\n", id, label);
+	}
+
 	if ((kb->compose == 1) && (k->type != Compose) && (k->type != Mod) &&
 	    (k->layout)) {
 		kb->compose++;
@@ -259,6 +290,8 @@ kbd_press_key(struct kbd *kb, struct key *k, uint32_t time) {
 		kbd_draw_key(kb, k, Press);
 		zwp_virtual_keyboard_v1_key(kb->vkbd, time, kb->last_press->code,
 		                            WL_KEYBOARD_KEY_STATE_PRESSED);
+		k->id = id;
+		k->pressed = true;
 		if (kb->print || kb->print_intersect)
 			kbd_print_key_stdout(kb, k);
 		if (kb->compose) {
